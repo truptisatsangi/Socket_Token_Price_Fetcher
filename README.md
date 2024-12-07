@@ -46,3 +46,9 @@ Conduct cross-chain opinion polls where users from any network can participate.
 
 ### Cross-Chain Event Voting:
 Enable voting for global events or initiatives involving multiple blockchain ecosystems.
+
+![image](https://github.com/user-attachments/assets/129f3ea4-50e2-469b-a376-831d2a2826fa)
+
+
+![image](https://github.com/user-attachments/assets/df5cacf3-bd2d-4cdf-a06a-7a8e3e41ac04)
+
