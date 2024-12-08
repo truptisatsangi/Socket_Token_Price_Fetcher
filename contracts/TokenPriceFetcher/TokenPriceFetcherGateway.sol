@@ -8,6 +8,7 @@ import "../interfaces/IForwarder.sol";
 contract TokenPriceFetcherGateway is AppGatewayBase {
     // price[tokenid][chainid] = <price>
     mapping(uint256 => mapping(uint32 => uint256)) public price;
+    mapping(uint256 => uint256) public gasPrices; // Chain ID to Gas Price in wei
 
     uint8 SUPPORTED_CHAINS = 3;
 
@@ -32,6 +33,7 @@ contract TokenPriceFetcherGateway is AppGatewayBase {
         // Get price from the forwarder contract (Uniswap pair on remote chain)
         for (uint256 i; i < forwarder.length; i++) {
             TokenPriceFetcher(forwarder[i]).getTokenPrice(token[i]);
+            // TokenPriceFetcher(forwarder[i]).getCurrentGasPrice();
             // Emit the promise and fetch the price on the remote chain
             IPromise(forwarder[i]).then(
                 this.fetchPriceCallback.selector,
@@ -71,6 +73,7 @@ contract TokenPriceFetcherGateway is AppGatewayBase {
                 minIndex = i;
             }
         }
+
 
         // Need to get the gas prices on all the chains and return minimum after this minPrice + current gasPrice on chain
 

@@ -16,16 +16,10 @@ interface IUniswapV2Factory {
 }
 
 contract TokenPriceFetcher {
-    uint256 public proposalId;
     address public admin;
-    mapping(address => bool) public hasVoted;
-    mapping(uint256 => uint256) public votes;
-    bytes32[] public candidates;
     address public uniswapV2FactoryAddress;
     address public ethAddress;
-
-    event VoteCast(address indexed voter, uint256 proposalId);
-    event VotesSent(bytes32[] candidates, uint256[] voteCounts);
+    mapping(uint256 => uint256) public gasPrices; // Chain ID to Gas Price
 
     modifier onlyAdmin() {
         require(msg.sender == admin, "Not admin");
@@ -33,13 +27,8 @@ contract TokenPriceFetcher {
     }
 
     // Set the UniswapV2Factory address (mainnet: 0x5C69bEe701ef814a2B6a3EDD4B6B2Ff7f2C76A2f)
-    constructor(
-        bytes32[] memory _candidates,
-        address _uniswapV2FactoryAddress,
-        address _ethAddress
-    ) {
+    constructor(address _uniswapV2FactoryAddress, address _ethAddress) {
         admin = msg.sender;
-        candidates = _candidates;
         uniswapV2FactoryAddress = _uniswapV2FactoryAddress;
         ethAddress = _ethAddress;
     }
@@ -65,6 +54,11 @@ contract TokenPriceFetcher {
     ) external view returns (uint256 price) {
         require(token != address(0), "Invalid token");
         price = getPrice(token, ethAddress);
+    }
+
+    // Function to update gas price for a specific chain
+    function getCurrentGasPrice() public view returns (uint256) {
+        return tx.gasprice; // Returns the gas price in wei
     }
 
     // Can be called once person wants to buy the tokens after knowing the price

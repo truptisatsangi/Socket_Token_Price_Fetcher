@@ -2,7 +2,7 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import "./Voting.sol";
-import "./base/AppDeployerBase.sol";
+import "../base/AppDeployerBase.sol";
 
 contract CounterDeployer is AppDeployerBase {
     bytes32 public voting = _createContractId("Voting");
