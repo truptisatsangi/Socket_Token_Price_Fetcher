@@ -3,9 +3,10 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "../base/AppGatewayBase.sol";
 import "./Voting.sol";
+import "../interfaces/IForwarder.sol";
 
 contract CounterAppGateway is AppGatewayBase {
-    mapping(uint256 => mapping(uint8 => uint256)) public aggregatedVotes;
+    mapping(uint256 => mapping(uint32 => uint256)) public aggregatedVotes;
 
     constructor(
         address _addressResolver,
@@ -16,17 +17,13 @@ contract CounterAppGateway is AppGatewayBase {
         _setFeesData(feesData_);
     }
 
-    function fetchVotes(
-        address forwarder,
-        uint256 proposalId,
-        uint8 chainId
-    ) public async {
+    function fetchVotes(address forwarder, uint256 proposalId) public async {
         _readCallOn();
 
         Voting(forwarder).votes(proposalId);
         IPromise(forwarder).then(
             this.fetchVotesCallback.selector,
-            abi.encode(forwarder, proposalId, chainId)
+            abi.encode(forwarder, proposalId)
         );
 
         _readCallOff();
@@ -36,10 +33,11 @@ contract CounterAppGateway is AppGatewayBase {
         bytes calldata data,
         bytes calldata returnData
     ) external onlyPromises {
-        (address forwarder, uint256 proposalId, uint8 chainId) = abi.decode(
+        (address forwarder, uint256 proposalId) = abi.decode(
             data,
-            (address, uint256, uint8)
+            (address, uint256)
         );
+        uint32 chainId = IForwarder(forwarder).getChainSlug();
         uint256 votes = abi.decode(returnData, (uint256));
         aggregatedVotes[proposalId][chainId] += votes;
     }
