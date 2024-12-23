@@ -70,3 +70,5 @@ SOCKET Protocol is the first chain-abstraction protocol, enabling developers to 
 SOCKET is a chain-abstraction protocol, not a network(chain/rollup). Using a combination of offchain agents(watchers, transmitters) and onchain contracts(switchboards) it enables application-builders to build truly chain-abstracted protocols.
 
 Find more information at [docs](https://docs.socket.tech)
+
+Next task: Use foundary and complete it to end to end :)
